@@ -1,17 +1,24 @@
-import Phaser from 'phaser'
+import * as PIXI from 'pixi.js'
 
-export default class OutputScene extends Phaser.Scene {
+export default class OutputScene extends PIXI.Container {
   constructor(config) {
-    super(config)
+    super()
     this.x = config.x
     this.y = config.y
-    this.width = config.width
-    this.height = config.height
+
+    this.sceneConfig = {
+      width: config.width,
+      height: config.height
+    }
+
+    this.init()
   }
 
-  preload() {
-    const graphics = this.add.graphics()
-    graphics.fillStyle(0x000000, 1.0)
-    graphics.fillRect(this.x, this.y, this.width, this.height)
+  init() {
+    const bg = new PIXI.Graphics()
+    bg.beginFill(0x000000, 1.0)
+    bg.drawRect(0, 0, this.sceneConfig.width, this.sceneConfig.height)
+    bg.endFill()
+    this.addChild(bg)
   }
 }
