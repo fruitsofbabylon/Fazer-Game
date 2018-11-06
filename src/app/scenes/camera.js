@@ -1,5 +1,7 @@
 import * as PIXI from 'pixi.js'
-import tracking from 'tracking.js'
+import * as _ from 'tracking'
+
+const tracking = window.tracking
 
 export default class CameraScene extends PIXI.Container {
   constructor(config) {
@@ -13,10 +15,7 @@ export default class CameraScene extends PIXI.Container {
     }
 
     // Video HTML5 element
-    this.video = document.createElement('video')
-    this.video.setAttribute('width', 1280)
-    this.video.setAttribute('height', 720)
-
+    this.video = document.getElementById('cameraVideo')
     this.init()
   }
 
@@ -27,6 +26,10 @@ export default class CameraScene extends PIXI.Container {
     bg.endFill()
     this.addChild(bg)
 
+    this.setupVideo()
+  }
+
+  setupVideo() {
     // Ask user permission
     navigator.mediaDevices.getUserMedia({
       video: {
@@ -49,6 +52,32 @@ export default class CameraScene extends PIXI.Container {
     videoSprite.width = this.sceneConfig.width
     videoSprite.height = this.sceneConfig.height
     this.addChild(videoSprite)
+
+    this.setupTracking()
   }
 
+  setupTracking() {
+    const widthRatio = this.sceneConfig.width / this.video.width
+    const heightRatio = this.sceneConfig.height / this.video.height
+
+    const childSize = this.children.length
+
+    this.tracker = new tracking.ColorTracker('cyan')
+    this.tracker.on('track', event => {
+      const newSize = this.children.length
+      for (let i = childSize; i < newSize; i++) {
+        this.removeChildAt(i)
+      }
+
+      event.data.forEach(i => {
+        console.log('drawing... ' + i)
+        const rect = new PIXI.Graphics()
+        rect.beginFill(0xFFFFFF, 1.0)
+        rect.drawRect(i.x * widthRatio, i.y * heightRatio, i.width * widthRatio, i.height * heightRatio)
+        rect.endFill()
+        this.addChild(rect)
+      })
+    })
+    tracking.track('#cameraVideo', this.tracker)
+  }
 }
