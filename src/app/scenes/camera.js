@@ -20,12 +20,6 @@ export default class CameraScene extends PIXI.Container {
   }
 
   init() {
-    const bg = new PIXI.Graphics()
-    bg.beginFill(0xFFFFFF, 1.0)
-    bg.drawRect(this.x, this.y, this.sceneConfig.width, this.sceneConfig.height)
-    bg.endFill()
-    this.addChild(bg)
-
     this.setupVideo()
   }
 
@@ -37,12 +31,13 @@ export default class CameraScene extends PIXI.Container {
         height: 720,
         frameRate: 30
       }
-    }).then(stream => {
+    })
+    .then(stream => {
       // Assign video stream to video element
       this.video.srcObject = stream
     })
     .catch(err => {
-      console.error(err)
+      alert(err)
     })
 
     // Create pixi sprite from video element
@@ -70,7 +65,6 @@ export default class CameraScene extends PIXI.Container {
       }
 
       event.data.forEach(i => {
-        console.log('drawing... ' + i)
         const rect = new PIXI.Graphics()
         rect.beginFill(0xFFFFFF, 1.0)
         rect.drawRect(i.x * widthRatio, i.y * heightRatio, i.width * widthRatio, i.height * heightRatio)
