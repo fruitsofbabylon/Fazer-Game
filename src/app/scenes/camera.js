@@ -1,18 +1,12 @@
 import * as PIXI from 'pixi.js'
 import * as _ from 'tracking'
+import { BaseScene } from './baseScene';
 
 const tracking = window.tracking
 
-export default class CameraScene extends PIXI.Container {
+export default class CameraScene extends BaseScene {
   constructor(config) {
-    super()
-    this.x = config.x
-    this.y = config.y
-
-    this.sceneConfig = {
-      width: config.width,
-      height: config.height
-    }
+    super(config)
 
     // Video HTML5 element
     this.video = document.getElementById('cameraVideo')

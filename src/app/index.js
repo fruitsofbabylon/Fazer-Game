@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import RootScene from './scenes/root.js'
+import { SceneConfig } from './scenes/baseScene.js';
 
 const width = 1280
 const height = 720
@@ -23,5 +24,9 @@ PIXI.loader
   .load(loaded)
 
 function loaded() {
-  game.stage.addChild(new RootScene(width, height))
+  game.stage.addChild(
+    new RootScene(
+      new SceneConfig(0, 0, width, height, 0xEBEBEB)
+    )
+  )
 }

@@ -1,26 +1,15 @@
 import * as PIXI from 'pixi.js'
 import ColorActionElement from '../visual/colorAction';
+import { BaseScene } from './baseScene';
 
-export default class InputScene extends PIXI.Container {
+export default class InputScene extends BaseScene {
   constructor(config) {
-    super()
-    this.x = config.x
-    this.y = config.y
-
-    this.sceneConfig = {
-      width: config.width,
-      height: config.height
-    }
+    super(config)
 
     this.init()
   }
 
   init() {
-    const bg = new PIXI.Graphics()
-    bg.beginFill(0xDEDEDE, 1.0)
-    bg.drawRect(0, 0, this.sceneConfig.width, this.sceneConfig.height)
-    bg.endFill()
-
     const actions = new PIXI.Container()
     const params = [
       { color: 'cyan', icon: 'actions/dough' },
@@ -48,10 +37,7 @@ export default class InputScene extends PIXI.Container {
     actions.position.x = sceneCenter.x - actionsCenter.x
     actions.position.y = sceneCenter.y - actionsCenter.y
 
-    this.addChild(
-      bg,
-      actions
-    )
+    this.addChild(actions)
   }
 
 }
