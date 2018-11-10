@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import colors from '../colors';
+import colors from '../../colors';
 
 const resources = PIXI.loader.resources
 const SPRITE_WIDTH = 64

@@ -14,7 +14,7 @@ export class BaseScene extends PIXI.Container {
 
     _init() {
         const bg = new PIXI.Graphics()
-        bg.beginFill(this.sceneConfig.bgColor, 1.0)
+        bg.beginFill(this.sceneConfig.bgColor, this.sceneConfig.bgColor == null ? 0 : 1)
         bg.drawRect(0, 0, this.sceneConfig.width, this.sceneConfig.height)
         bg.endFill()
 
@@ -23,7 +23,7 @@ export class BaseScene extends PIXI.Container {
 }
 
 export class SceneConfig {
-    constructor(x, y, width, height, bg = 0xFFFFFF) {
+    constructor(x, y, width, height, bg = null) {
         this.width = width
         this.height = height
         this.x = x
