@@ -29,9 +29,7 @@ export default class TabHeader extends PIXI.Container {
 
         if (param.isActive) return
 
-        this.params.forEach(param => param.isActive = false)
         this.children.forEach(child => child.setActive(false))
-        param.isActive = true
         event.currentTarget.setActive(true)
 
         if (this.tabChangeListener) {
@@ -61,5 +59,6 @@ class TabItem extends PIXI.Container {
 
     setActive(active) {
         this.bg.alpha = active ? 1 : 0
+        this.tabParam.isActive = active
     }
 }
