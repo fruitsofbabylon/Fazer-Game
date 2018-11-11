@@ -2,12 +2,18 @@ import * as PIXI from 'pixi.js'
 import { BaseScene } from "../baseScene";
 import SequenceActionDragContainer from './sequenceActionDrag';
 import SequenceActionDropContainer from './sequenceActionDrop';
+import { runInThisContext } from 'vm';
 
 export default class SequenceInputScene extends BaseScene {
     constructor(config){
         super(config)
 
         this.init()
+
+        // Hack around drag problems
+        this.dragListener = (event => this.drag(event))
+        this.dragStopListener = (event => this.stopDrag(event.currentTarget))
+        this.dragElement = null
     }
 
     init() {
@@ -34,28 +40,35 @@ export default class SequenceInputScene extends BaseScene {
         const element = event.currentTarget
         const position = event.data.getLocalPosition(this)
 
-        element.on('mousemove', event => this.drag(event))
-        element.on('mouseup', event => this.stopDrag(event.currentTarget))
+        window.addEventListener('mousemove', this.dragListener)
+        window.addEventListener('mouseup', this.dragStopListener)
 
         this.addChild(element)
         element.position = centerPosition(element, position)
+
+        this.dragElement = element
     }
 
     drag(event) {
-        const element = event.currentTarget
-        const position = event.data.getLocalPosition(this)
+        const element = this.dragElement
+        const eventPosition = new PIXI.Point(event.clientX, event.clientY)
+        const position = this.toLocal(eventPosition)
 
         element.position = centerPosition(element, position)
         this.dropContainer.onDrag(element)
     }
 
-    stopDrag(element) {
-        element.removeAllListeners('mousemove')
-        element.removeAllListeners('mouseup')
+    stopDrag(event) {
+        const element = this.dragElement
+
+        window.removeEventListener('mousemove', this.dragListener)
+        window.removeEventListener('mouseup', this.dragStopListener)
         this.removeChild(element)
+        this.dragElement = null
 
-        if (this.dropContainer.onStopDrag(element)) {
-
+        const [accepted, actionToReturnBack] = this.dropContainer.onStopDrag(element)
+        if (accepted) {
+            if (actionToReturnBack) this.dragContainer.onStopDrag(actionToReturnBack)
         } else {
             this.dragContainer.onStopDrag(element)
         }
