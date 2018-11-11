@@ -21,8 +21,8 @@ export default class CameraScene extends BaseScene {
     // Ask user permission
     navigator.mediaDevices.getUserMedia({
       video: {
-        width: 1280,
-        height: 720,
+        width: 640,
+        height: 360,
         frameRate: 30
       }
     })
@@ -66,6 +66,6 @@ export default class CameraScene extends BaseScene {
         this.addChild(rect)
       })
     })
-    tracking.track('#cameraVideo', this.tracker)
+    // tracking.track('#cameraVideo', this.tracker)
   }
 }

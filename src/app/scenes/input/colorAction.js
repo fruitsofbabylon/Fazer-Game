@@ -26,7 +26,7 @@ export default class ColorActionElement extends PIXI.Container {
         colorSprite.height = SPRITE_HEIGHT
         colorSprite.tint = colors[this.colorId].hex
 
-        const arrowSprite = new PIXI.Sprite(resources["colorAction/arrow"].texture)
+        const arrowSprite = new PIXI.Sprite(resources["arrow"].texture)
         arrowSprite.width = SPRITE_WIDTH / 2
         arrowSprite.height = SPRITE_HEIGHT / 2
 

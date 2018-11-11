@@ -17,7 +17,7 @@ document.body.appendChild(game.view)
 
 PIXI.loader
   .add("actions/dough", "img/actions/dough.png")
-  .add("colorAction/arrow", "img/common/arrow.png")
+  .add("arrow", "img/common/arrow.png")
   .add("actions/oven", "img/actions/oven.png")
   .add("actions/cut", "img/actions/cutter.png")
   .add("actions/sauce", "img/actions/sauce.png")

@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { BaseScene, SceneConfig } from '../baseScene';
-import ColorInputScene from './colorInput';
-import SequenceInputScene from './sequenceInput';
+import ColorInputScene from './colorInputScene';
+import SequenceInputScene from './sequenceInputScene';
 import TabHeader from './tabHeader';
 
 export default class InputScene extends BaseScene {
@@ -21,26 +21,10 @@ export default class InputScene extends BaseScene {
     this.tabParams = [
       { 
         header: '1', 
-        scene: new ColorInputScene(
-          new SceneConfig(
-            0,
-            0,
-            this.sceneConfig.width,
-            this.sceneConfig.height
-          )
-        ),
         isActive: true
       },
       {
         header: '2',
-        scene: new SequenceInputScene(
-          new SceneConfig(
-            0,
-            0,
-            this.sceneConfig.width,
-            this.sceneConfig.height
-          )
-        ),
         isActive: false
       }
     ]
@@ -48,17 +32,31 @@ export default class InputScene extends BaseScene {
     this.tabHeader = new TabHeader(this.tabParams, clickedIndex => this.setTabActive(clickedIndex))
     this.addChild(this.tabHeader)
 
+    const contentConfig = new SceneConfig(
+      0,
+      this.tabHeader.height,
+      this.sceneConfig.width,
+      this.sceneConfig.height - this.tabHeader.height
+    )
+    this.sceneParams = [
+      {
+        scene: new ColorInputScene(contentConfig)
+      },
+      {
+        scene: new SequenceInputScene(contentConfig)
+      }
+    ]
     this.setTabActive(this.currentTabIndex)
   }
 
   setTabActive(index) {
     if (this.currentTabIndex != null) {
-      const previousScene = this.tabParams[this.currentTabIndex].scene
+      const previousScene = this.sceneParams[this.currentTabIndex].scene
       this.removeChild(previousScene)
     }
 
     this.currentTabIndex = index
-    const newScene = this.tabParams[this.currentTabIndex].scene
+    const newScene = this.sceneParams[this.currentTabIndex].scene
     this.addChild(newScene)
   }
 }

@@ -14,6 +14,12 @@ export default class RootScene extends BaseScene {
 
   init() {
     this.addChild(
+      new CameraScene(new SceneConfig(
+        this.sceneConfig.width / 2, 
+        this.y, 
+        this.sceneConfig.width / 2, 
+        this.sceneConfig.height / 3
+      )),
       new OutputScene( new SceneConfig(
         this.x, 
         this.y, 
@@ -27,12 +33,6 @@ export default class RootScene extends BaseScene {
         this.sceneConfig.width / 2, 
         this.sceneConfig.height / 3 * 2,
         0xDEDEDE
-      )),
-      new CameraScene(new SceneConfig(
-        this.sceneConfig.width / 2, 
-        this.y, 
-        this.sceneConfig.width / 2, 
-        this.sceneConfig.height / 3
       ))
     )
   }
