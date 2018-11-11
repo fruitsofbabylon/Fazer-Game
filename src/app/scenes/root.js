@@ -13,20 +13,22 @@ export default class RootScene extends BaseScene {
   }
 
   init() {
+    const outputScene = new OutputScene( new SceneConfig(
+      this.x, 
+      this.y, 
+      this.sceneConfig.width / 2, 
+      this.sceneConfig.height,
+      0x000000  
+    ))
+
     this.addChild(
       new CameraScene(new SceneConfig(
         this.sceneConfig.width / 2, 
         this.y, 
         this.sceneConfig.width / 2, 
         this.sceneConfig.height / 3
-      )),
-      new OutputScene( new SceneConfig(
-        this.x, 
-        this.y, 
-        this.sceneConfig.width / 2, 
-        this.sceneConfig.height,
-        0x000000  
-      )),
+      ), event => outputScene.onColor(event.data.map(it => it.color))),
+      outputScene,
       new InputScene(new SceneConfig(
         this.sceneConfig.width / 2, 
         this.sceneConfig.height / 3, 
@@ -37,5 +39,8 @@ export default class RootScene extends BaseScene {
     )
   }
 
-
+  onTrackColor(event) {
+    if (event.data.length == 0) return
+    
+  }
 }

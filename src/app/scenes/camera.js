@@ -1,15 +1,17 @@
 import * as PIXI from 'pixi.js'
 import * as _ from 'tracking'
 import { BaseScene } from './baseScene';
+import colors from '../colors';
 
 const tracking = window.tracking
 
 export default class CameraScene extends BaseScene {
-  constructor(config) {
+  constructor(config, colorTrackListener) {
     super(config)
 
     // Video HTML5 element
     this.video = document.getElementById('cameraVideo')
+    this.colorTrackListener = colorTrackListener
     this.init()
   }
 
@@ -46,26 +48,16 @@ export default class CameraScene extends BaseScene {
   }
 
   setupTracking() {
-    const widthRatio = this.sceneConfig.width / this.video.width
-    const heightRatio = this.sceneConfig.height / this.video.height
-
-    const childSize = this.children.length
-
-    this.tracker = new tracking.ColorTracker('cyan')
-    this.tracker.on('track', event => {
-      const newSize = this.children.length
-      for (let i = childSize; i < newSize; i++) {
-        this.removeChildAt(i)
+    const colorNames = Object.keys(colors)
+    colorNames.forEach(colorName => {
+      const colorFunction = colors[colorName].colorFunction
+      if (colorFunction) {
+        tracking.ColorTracker.registerColor(colorName, colorFunction)
       }
-
-      event.data.forEach(i => {
-        const rect = new PIXI.Graphics()
-        rect.beginFill(0xFFFFFF, 1.0)
-        rect.drawRect(i.x * widthRatio, i.y * heightRatio, i.width * widthRatio, i.height * heightRatio)
-        rect.endFill()
-        this.addChild(rect)
-      })
     })
-    // tracking.track('#cameraVideo', this.tracker)
+
+    this.tracker = new tracking.ColorTracker(colorNames)
+    this.tracker.on('track', event => this.colorTrackListener(event))
+    tracking.track('#cameraVideo', this.tracker)
   }
 }

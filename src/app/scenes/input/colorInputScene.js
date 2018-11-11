@@ -1,5 +1,6 @@
 import { BaseScene } from "../baseScene";
 import ColorActionElement from './colorAction';
+import { levels, currentLevel } from "../../levels";
 
 export default class ColorInputScene extends BaseScene {
     constructor(config) {
@@ -10,13 +11,7 @@ export default class ColorInputScene extends BaseScene {
 
     init() {
         const actions = new PIXI.Container()
-        const params = [
-          { color: 'cyan', icon: 'actions/dough' },
-          { color: 'magenta', icon: 'actions/oven' },
-          { color: 'yellow', icon: 'actions/cut' },
-          { color: 'green', icon: 'actions/sauce' },
-          { color: 'red', icon: 'actions/topping' }      
-        ]
+        const params = levels[currentLevel].actions
     
         let previousY = 0
         params.forEach((param) => {
