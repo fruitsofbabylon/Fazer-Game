@@ -21,11 +21,12 @@ export default class SequenceInputScene extends BaseScene {
             'actions/dough',
             'actions/oven',
             'actions/cut',
-            'actions/sauce'
+            'actions/sauce',
+            'actions/topping'
         ]
 
-        const dragContainer = new SequenceActionDragContainer(this.actionsIds, 2, event => this.startDrag(event))
-        const dropContainer = new SequenceActionDropContainer(4)
+        const dragContainer = new SequenceActionDragContainer(this.actionsIds, 3, event => this.startDrag(event))
+        const dropContainer = new SequenceActionDropContainer(5)
 
         dropContainer.position = new PIXI.Point(10, 10)
         dragContainer.position = new PIXI.Point(dropContainer.x, dropContainer.y + dropContainer.height + 64)
