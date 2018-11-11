@@ -10,5 +10,8 @@ export default {
     },
     'green': {
         hex: 0x00FF00
+    },
+    'red': {
+        hex: 0xFF0000
     }
 }

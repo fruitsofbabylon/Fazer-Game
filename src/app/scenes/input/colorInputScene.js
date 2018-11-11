@@ -14,7 +14,8 @@ export default class ColorInputScene extends BaseScene {
           { color: 'cyan', icon: 'actions/dough' },
           { color: 'magenta', icon: 'actions/oven' },
           { color: 'yellow', icon: 'actions/cut' },
-          { color: 'green', icon: 'actions/sauce' },      
+          { color: 'green', icon: 'actions/sauce' },
+          { color: 'red', icon: 'actions/topping' }      
         ]
     
         let previousY = 0
