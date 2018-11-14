@@ -6,8 +6,17 @@ export const levels = [
           { color: 'blue', icon: 'actions/cut' },
           { color: 'green', icon: 'actions/sauce' },
           { color: 'red', icon: 'actions/topping' }   
+        ],
+        actionsOrder: [
+            'actions/dough',
+            'actions/sauce',
+            'actions/topping',
+            'actions/oven',
+            'actions/cut'
         ]
     }
 ]
 
 export const currentLevel = 0
+
+export const modes = ['1', '2']
