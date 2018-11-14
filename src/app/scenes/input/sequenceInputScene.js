@@ -5,8 +5,10 @@ import SequenceActionDropContainer from './sequenceActionDrop';
 import { runInThisContext } from 'vm';
 
 export default class SequenceInputScene extends BaseScene {
-    constructor(config){
+    constructor(config, onRun){
         super(config)
+
+        this.onRun = onRun
 
         this.init()
 
@@ -35,6 +37,19 @@ export default class SequenceInputScene extends BaseScene {
 
         this.dragContainer = dragContainer
         this.dropContainer = dropContainer
+        
+        const button = new Button("", 0xFF0000, 100, 50)
+        button.position = {
+            x: this.sceneConfig.width - button.width - 50,
+            y: this.sceneConfig.height - button.height - 50
+        }
+        button.on('pointerdown', () => this.runActions())
+        this.addChild(button)
+    }
+
+    runActions() {
+        const actions = this.dropContainer.getActions()
+        this.onRun(actions)
     }
 
     startDrag(event) {
@@ -78,4 +93,46 @@ export default class SequenceInputScene extends BaseScene {
 
 function centerPosition(element, position) {
     return new PIXI.Point(position.x - element.width / 2, position.y - element.height / 2)
+}
+
+class Button extends PIXI.Container {
+    constructor(text, bg, width, height) {
+        super()
+
+        this.text = text
+        this.bgColor = bg
+        this.buttonWidth = width
+        this.buttonHeight = height
+        this.interactive = true
+        this.buttonMode = true
+
+        this.on('pointerover', event => this.onHoverEnter())
+        this.on('pointerout', event => this.onHoverExit())
+
+        this.init()
+    }
+
+    init() {
+        this.bg = new PIXI.Graphics()
+        this.drawBg(0.6)
+
+        this.text = new PIXI.Text(this.text)
+        //this.text.position = centerPosition(this.text, new PIXI.Point(this.buttonWidth / 2, this.buttonHeight / 2))
+        this.addChild(this.bg, this.text)
+    }
+
+    onHoverEnter() {
+        this.drawBg(1.0)
+    }
+
+    onHoverExit() {
+        this.drawBg(0.6)
+    }
+
+    drawBg(alpha) {
+        this.bg.clear()
+        this.bg.beginFill(this.bgColor, alpha)
+        this.bg.drawRoundedRect(0, 0, this.buttonWidth, this.buttonHeight, this.buttonHeight / 4)
+        this.bg.endFill()
+    }
 }

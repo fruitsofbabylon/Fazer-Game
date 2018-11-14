@@ -3,18 +3,30 @@ import { BaseScene, SceneConfig } from '../baseScene';
 import ColorInputScene from './colorInputScene';
 import SequenceInputScene from './sequenceInputScene';
 import TabHeader from './tabHeader';
+import { levels, currentLevel } from '../../levels';
 
 export default class InputScene extends BaseScene {
-  constructor(config) {
+  constructor(config, onActions) {
     super(config)
 
     this.currentTabIndex = 0
+    this.onActions = onActions
+    this.possibleActions = levels[currentLevel].actions
 
     this.init()
   }
 
   init() {
     this.createTabHeader()
+  }
+
+  onColors(colors) {
+    if (this.currentTabIndex != 0) return
+
+    const actions = colors.map(color => this.possibleActions.find(it => it.color == color))
+      .map(it => it.icon)
+      
+    this.onActions(actions)
   }
 
   createTabHeader() {
@@ -43,7 +55,7 @@ export default class InputScene extends BaseScene {
         scene: new ColorInputScene(contentConfig)
       },
       {
-        scene: new SequenceInputScene(contentConfig)
+        scene: new SequenceInputScene(contentConfig, actions => this.onActions(actions))
       }
     ]
     this.setTabActive(this.currentTabIndex)

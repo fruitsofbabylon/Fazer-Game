@@ -33,6 +33,11 @@ export default class SequenceActionDropContainer extends PIXI.Container {
         }
     }
 
+    getActions() {
+        return this.holders.map(it => it.actionId)
+            .filter(id => !!id)
+    }
+
     onDrag(element) {
         const suitableHolders = this.findHolder(element)
         

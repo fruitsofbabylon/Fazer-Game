@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js'
 import { BaseScene } from './baseScene';
-import { levels, currentLevel } from '../levels';
 
 const resources = PIXI.loader.resources
 
@@ -12,20 +11,37 @@ export default class OutputScene extends BaseScene {
   }
 
   init() {
-    this.possibleActions = levels[currentLevel].actions
+    this.bg = this.getChildAt(0)
   }
 
-  onColor(colors) {
-    this.removeChildren()
+  onAction(actions) {
+    if (actions.length == 0) return
 
-    const icons = [...new Set(colors)] // Only unique colors
-      .map(color => this.possibleActions.find(it => it.color == color))
-      .map(it => it.icon)
-      .forEach(icon => {
-        const actionSprite = new PIXI.Sprite(resources[icon].texture)
-        actionSprite.width = 64
-        actionSprite.height = 64
-        this.addChild(actionSprite)
-      })
+    clearTimeout(this.timeout)
+
+    this.removeChildren()
+    this.addChild(this.bg)
+
+    this.sprites = actions.map(action => {
+      const actionSprite = new PIXI.Sprite(resources[action].texture)
+      actionSprite.width = 64
+      actionSprite.height = 64
+      actionSprite.name = "currentSprite"
+      return [actionSprite, 1000]
+    })
+
+    this.scheduleNext(0)    
+  }
+
+  scheduleNext(millis) {
+    this.timeout = setTimeout(() => {
+      const [sprite, duration] = this.sprites.shift()
+      this.removeChild(this.getChildByName("currentSprite"))
+      this.addChild(sprite)
+
+      if (this.sprites.length > 0) {
+        this.scheduleNext(duration)
+      }
+    }, millis)
   }
 }
