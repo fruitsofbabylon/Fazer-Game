@@ -40,8 +40,9 @@ export default class CameraScene extends BaseScene {
     const videoSprite = new PIXI.Sprite(
       new PIXI.Texture.fromVideo(this.video)
     )
-    videoSprite.width = this.sceneConfig.width
+    videoSprite.width = this.video.width * (this.sceneConfig.height / this.video.height)
     videoSprite.height = this.sceneConfig.height
+    videoSprite.x = this.sceneConfig.width / 2 - videoSprite.width / 2
     this.addChild(videoSprite)
 
     this.setupTracking()
