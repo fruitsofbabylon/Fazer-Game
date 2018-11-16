@@ -13,6 +13,7 @@ export default class InputScene extends BaseScene {
     this.onActions = onActions
     this.onModeUpdate = onModeUpdate
     this.possibleActions = levels[currentLevel].actions
+    this.previousColors = []
 
     this.init()
   }

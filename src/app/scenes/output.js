@@ -22,17 +22,17 @@ export default class OutputScene extends BaseScene {
 
   onModeUpdate(newMode) {
     this.mode = newMode
+    this.clear()
 
     if (this.mode == MODES.camera) {
       this.actions = levels[currentLevel].actionsOrder.slice(0) // Copy to prevent changing original
-      this.showHint()
+      this.showHint(5000)
     }
   }
 
   onAction(actions) {
     if (actions.length == 0) return
 
-    clearTimeout(this.timeout)
     this.clear()
 
     this.sprites = actions.map(action => {
@@ -40,6 +40,12 @@ export default class OutputScene extends BaseScene {
       actionSprite.width = 64
       actionSprite.height = 64
       actionSprite.name = "currentSprite"
+
+      actionSprite.position = new PIXI.Point(
+        this.sceneConfig.width / 2 - actionSprite.width / 2,
+        this.sceneConfig.height /2 - actionSprite.height / 2
+      )
+
       return [action, actionSprite, 1000]
     })
 
@@ -52,7 +58,7 @@ export default class OutputScene extends BaseScene {
   }
 
   scheduleSequence(millis) {
-    this.timeout = setTimeout(() => {
+    this.sequenceTimeout = setTimeout(() => {
       const [id, sprite, duration] = this.sprites.shift()
       const correctId = this.actions.shift()
 
@@ -70,7 +76,7 @@ export default class OutputScene extends BaseScene {
   }
 
   scheduleCamera() {
-    const [id, sprite] = this.sprites.shift()
+    const [id, sprite, duration] = this.sprites.shift()
     const correctId = this.actions.shift()
 
     console.log(id, correctId)
@@ -84,9 +90,10 @@ export default class OutputScene extends BaseScene {
     } else if (correctId != id) {
       this.showError()
       this.actions.unshift(correctId)
+      this.showHint(0)
+    } else {
+      this.showHint(duration + 2000)
     }
-
-    this.showHint()
   }
 
   showError() {
@@ -99,6 +106,9 @@ export default class OutputScene extends BaseScene {
   clear() {
     this.removeChildren()
     this.addChild(this.bg)
+
+    clearTimeout(this.sequenceTimeout)
+    clearTimeout(this.hintTimeout)
 
     this.bg.clear()
       .beginFill(0x000000, 1.0)
@@ -113,7 +123,7 @@ export default class OutputScene extends BaseScene {
       .endFill()
   }
 
-  showHint() {
+  showHint(delay) {
     this.removeChild(this.getChildByName('hint'))
     if (this.actions.length == 0) return
 
@@ -130,10 +140,15 @@ export default class OutputScene extends BaseScene {
         .endFill(),
        hintSprite
     )
-    hint.position.x = this.sceneConfig.width - hint.width
 
-    this.addChild(
-      hint
+    hint.position = new PIXI.Point(
+      this.sceneConfig.width / 2 - hint.width / 2,
+      this.sceneConfig.height /2 - hint.height / 2
     )
+
+    clearTimeout(this.hintTimeout)
+    this.hintTimeout = setTimeout(() => {
+      this.addChild(hint)
+    }, delay)
   }
 }
