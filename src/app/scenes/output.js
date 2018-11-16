@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import anime from 'animejs'
 import { BaseScene } from './baseScene';
 import { levels, currentLevel, modes } from '../levels';
 
@@ -46,7 +47,7 @@ export default class OutputScene extends BaseScene {
         this.sceneConfig.height /2 - actionSprite.height / 2
       )
 
-      return [action, actionSprite, 1000]
+      return [action, actionSprite, 2000]
     })
 
     if (this.mode == MODES.camera) {
@@ -59,11 +60,19 @@ export default class OutputScene extends BaseScene {
 
   scheduleSequence(millis) {
     this.sequenceTimeout = setTimeout(() => {
+
       const [id, sprite, duration] = this.sprites.shift()
       const correctId = this.actions.shift()
 
       this.removeChild(this.getChildByName("currentSprite"))
       this.addChild(sprite)
+
+      const anim = anime({
+        targets: sprite,
+        alpha: [0, 1],
+        duration: duration,
+        easing: 'linear'
+      })
 
       if (this.actions.length == 0 && this.sprites.length == 0) {
         this.showSuccess()
@@ -83,6 +92,12 @@ export default class OutputScene extends BaseScene {
 
     this.removeChild(this.getChildByName("currentSprite"))
     this.addChild(sprite)
+
+    anime({
+      targets: sprite,
+      alpha: [0, 1],
+      duration: duration
+    })
 
     if (this.actions.length == 0 && this.sprites.length == 0) {
       this.showSuccess()
