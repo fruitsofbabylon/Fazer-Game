@@ -3,7 +3,8 @@ import anime from 'animejs'
 
 export const outputAnimations = {
     'actions/dough': doughAnimation,
-    'actions/sauce': sauceAnimation
+    'actions/sauce': sauceAnimation,
+    'actions/topping': toppingAnimation
 }
 
 function doughAnimation(duration) {
@@ -44,3 +45,21 @@ function sauceAnimation(duration) {
     return sauce
 }
 
+function toppingAnimation(duration) {
+    const topping = new PIXI.Graphics()
+    topping.beginFill(0xffa600)
+        .drawCircle(43, 43, 43)
+        .endFill()
+
+    const animation = anime({
+        targets: topping.scale,
+        duration: duration,
+        x: 4,
+        y: 4,
+        easing: 'linear'
+    })
+    topping.on('added', () => animation.restart())
+    topping.pivot = new PIXI.Point(43, 43)
+
+    return topping
+}
