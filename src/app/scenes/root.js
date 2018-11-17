@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import OutputScene from './output';
+import OutputScene from './output/outputScene';
 import InputScene from './input/inputScene';
 import CameraScene from './camera';
 import { throws } from 'assert';

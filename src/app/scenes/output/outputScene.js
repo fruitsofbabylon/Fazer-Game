@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js'
 import anime from 'animejs'
-import { BaseScene } from './baseScene';
-import { levels, currentLevel, modes } from '../levels';
+import { BaseScene } from '../baseScene';
+import { levels, currentLevel, modes } from '../../levels';
+import { outputAnimations } from './outputAnimations';
 
 const resources = PIXI.loader.resources
 
@@ -37,17 +38,15 @@ export default class OutputScene extends BaseScene {
     this.clear()
 
     this.sprites = actions.map(action => {
-      const actionSprite = new PIXI.Sprite(resources[action].texture)
-      actionSprite.width = 64
-      actionSprite.height = 64
-      actionSprite.name = "currentSprite"
+      const duration = 300
+      const actionAnimatiom = outputAnimations[action](duration)
 
-      actionSprite.position = new PIXI.Point(
-        this.sceneConfig.width / 2 - actionSprite.width / 2,
-        this.sceneConfig.height /2 - actionSprite.height / 2
+      actionAnimatiom.position = new PIXI.Point(
+        this.sceneConfig.width / 2,
+        this.sceneConfig.height / 2,
       )
 
-      return [action, actionSprite, 2000]
+      return [action, actionAnimatiom, duration]
     })
 
     if (this.mode == MODES.camera) {
@@ -64,15 +63,7 @@ export default class OutputScene extends BaseScene {
       const [id, sprite, duration] = this.sprites.shift()
       const correctId = this.actions.shift()
 
-      this.removeChild(this.getChildByName("currentSprite"))
       this.addChild(sprite)
-
-      const anim = anime({
-        targets: sprite,
-        alpha: [0, 1],
-        duration: duration,
-        easing: 'linear'
-      })
 
       if (this.actions.length == 0 && this.sprites.length == 0) {
         this.showSuccess()
@@ -90,13 +81,14 @@ export default class OutputScene extends BaseScene {
 
     console.log(id, correctId)
 
-    this.removeChild(this.getChildByName("currentSprite"))
+    this.removeChild(this.getChildByName("currentAction"))
     this.addChild(sprite)
 
-    anime({
+    const anim = anime({
       targets: sprite,
       alpha: [0, 1],
-      duration: duration
+      duration: duration,
+      easing: 'linear'
     })
 
     if (this.actions.length == 0 && this.sprites.length == 0) {
