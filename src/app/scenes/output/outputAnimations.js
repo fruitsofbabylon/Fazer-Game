@@ -46,20 +46,35 @@ function sauceAnimation(duration) {
 }
 
 function toppingAnimation(duration) {
-    const topping = new PIXI.Graphics()
-    topping.beginFill(0xffa600)
+    const cheese = new PIXI.Graphics()
+    const meat = new PIXI.Graphics()
+
+    cheese.beginFill(0xffa600)
         .drawCircle(43, 43, 43)
         .endFill()
+    meat.beginFill(0xa53535)
+        .drawCircle(5, 5, 5)
+        .endFill()
 
-    const animation = anime({
-        targets: topping.scale,
+    const cheeseAnimation = anime({
+        targets: cheese.scale,
         duration: duration,
         x: 4,
         y: 4,
         easing: 'linear'
     })
-    topping.on('added', () => animation.restart())
-    topping.pivot = new PIXI.Point(43, 43)
+    const meatAnimation = anime({
+        targets: meat.scale,
+        duration: duration,
+        x: 4,
+        y: 4,
+        easing: 'linear'
+    })
 
-    return topping
+    cheese.on('added', () => cheeseAnimation.restart())
+    cheese.pivot = new PIXI.Point(43, 43)
+    meat.on('added', () => meatAnimation.restart())
+    meat.pivot = new PIXI.Point(5, 5)
+
+    return [cheese, meat]
 }
