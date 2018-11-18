@@ -46,6 +46,7 @@ function sauceAnimation(duration) {
 }
 
 function toppingAnimation(duration) {
+    const container = new PIXI.Container
     const cheese = new PIXI.Graphics()
     const meat = new PIXI.Graphics()
 
@@ -75,6 +76,7 @@ function toppingAnimation(duration) {
     cheese.pivot = new PIXI.Point(43, 43)
     meat.on('added', () => meatAnimation.restart())
     meat.pivot = new PIXI.Point(5, 5)
-
-    return [cheese, meat]
+    
+    container.addChild(cheese, meat)
+    return container
 }
