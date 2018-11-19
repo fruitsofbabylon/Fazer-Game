@@ -22,6 +22,7 @@ PIXI.loader
   .add("actions/cut", "img/actions/cutter.png")
   .add("actions/sauce", "img/actions/sauce.png")
   .add("actions/topping", "img/actions/topping.png")
+  .add("output/salami", "img/output/salami.png")
   .load(loaded)
 
 function loaded() {
