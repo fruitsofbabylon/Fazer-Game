@@ -65,11 +65,15 @@ export default class OutputScene extends BaseScene {
 
       this.addChild(sprite)
 
-      if (this.actions.length == 0 && this.sprites.length == 0) {
+      const isSuccess = this.actions.length == 0 && this.sprites.length == 0
+      const isError = this.sprites.length == 0 || correctId != id
+      const hasNext = this.sprites.length > 0
+
+      if (isSuccess) {
         this.showSuccess()
-      } else if (this.sprites.length == 0 || correctId != id) {
+      } else if (isError) {
         this.showError()
-      } else if (this.sprites.length > 0) {
+      } else if (hasNext) {
         this.scheduleSequence(duration)
       }
     }, millis)
