@@ -23,17 +23,17 @@ export default class InputScene extends BaseScene {
   }
 
   onColors(colors) {
-    if (this.currentTabIndex != 0) return
+    if (this.currentTabIndex != 0 && colors.length == 0) return
 
-    if (colors.length > 0 && colors.every(it => this.previousColors.includes(it))) {
+    if (colors.every(it => this.previousColors.includes(it))) {
       return // The same as colors before
     }
+    this.previousColors = colors
 
     const actions = colors.map(color => this.possibleActions.find(it => it.color == color))
       .map(it => it.icon)
       
     this.onActions(actions)
-    this.previousColors = colors
   }
 
   createTabHeader() {

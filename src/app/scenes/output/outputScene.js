@@ -35,23 +35,24 @@ export default class OutputScene extends BaseScene {
   onAction(actions) {
     if (actions.length == 0) return
 
-    this.clear()
-
     this.sprites = actions.map(action => {
       const duration = 300
-      const actionAnimatiom = outputAnimations[action](duration)
+      const actionAnimation = outputAnimations[action](duration)
 
-      actionAnimatiom.position = new PIXI.Point(
+      actionAnimation.position = new PIXI.Point(
         this.sceneConfig.width / 2,
         this.sceneConfig.height / 2,
       )
+      actionAnimation.name = action
 
-      return [action, actionAnimatiom, duration]
+      return [action, actionAnimation, duration]
     })
 
     if (this.mode == MODES.camera) {
+      this.clearError()
       this.scheduleCamera()
     } else if (this.mode == MODES.action) {
+      this.clear()
       this.actions = levels[currentLevel].actionsOrder.slice(0) // Copy to prevent changing original
       this.scheduleSequence(0)
     }
@@ -85,15 +86,8 @@ export default class OutputScene extends BaseScene {
 
     console.log(id, correctId)
 
-    this.removeChild(this.getChildByName("currentAction"))
+    this.removeChild(this.getChildByName(id))
     this.addChild(sprite)
-
-    const anim = anime({
-      targets: sprite,
-      alpha: [0, 1],
-      duration: duration,
-      easing: 'linear'
-    })
 
     if (this.actions.length == 0 && this.sprites.length == 0) {
       this.showSuccess()
@@ -121,6 +115,10 @@ export default class OutputScene extends BaseScene {
     clearTimeout(this.sequenceTimeout)
     clearTimeout(this.hintTimeout)
 
+    this.clearError()
+  }
+
+  clearError() {
     this.bg.clear()
       .beginFill(0x000000, 1.0)
       .drawRect(0, 0, this.sceneConfig.width, this.sceneConfig.height)

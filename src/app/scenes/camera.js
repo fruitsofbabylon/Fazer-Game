@@ -59,6 +59,6 @@ export default class CameraScene extends BaseScene {
 
     this.tracker = new tracking.ColorTracker(colorNames)
     this.tracker.on('track', event => this.colorTrackListener(event))
-    // tracking.track('#cameraVideo', this.tracker)
+    tracking.track('#cameraVideo', this.tracker)
   }
 }
