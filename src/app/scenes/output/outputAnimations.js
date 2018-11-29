@@ -6,7 +6,8 @@ const resources = PIXI.loader.resources
 export const outputAnimations = {
     'actions/dough': doughAnimation,
     'actions/sauce': sauceAnimation,
-    'actions/topping': toppingAnimation
+    'actions/topping': toppingAnimation,
+    'actions/oven': ovenAnimation
 }
 
 function doughAnimation(duration) {
@@ -105,4 +106,23 @@ function createMeat(x, y) {
     meat.position = new PIXI.Point(x, y)
     meat.scale = new PIXI.Point(0, 0)
     return meat
+}
+
+function ovenAnimation(duration) {
+    const oven = new PIXI.Sprite(resources['output/oven'].texture)
+    oven.width = 75
+    oven.height = 75
+    oven.pivot = new PIXI.Point(oven.width / 2, oven.height / 2)
+
+    const animation = anime({
+        targets: alpha,
+        duration: duration,
+        x: 4,
+        y: 4,
+        easing: 'easeInOutBack'
+    })
+
+    oven.on('added', () => animation.restart())
+    oven.scale = new PIXI.Point(0, 0)
+    return oven
 }
