@@ -36,7 +36,7 @@ export default class OutputScene extends BaseScene {
     if (actions.length == 0) return
 
     this.sprites = actions.map(action => {
-      const duration = 300
+      const duration = 2000
       const actionAnimation = outputAnimations[action](duration)
 
       actionAnimation.position = new PIXI.Point(

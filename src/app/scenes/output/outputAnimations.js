@@ -18,7 +18,7 @@ function doughAnimation(duration) {
 
     const animation = anime({
         targets: dough.scale,
-        duration: duration,
+        duration: 300,
         x: 4,
         y: 4,
         easing: 'easeInOutBack'
@@ -37,7 +37,7 @@ function sauceAnimation(duration) {
 
     const animation = anime({
         targets: sauce.scale,
-        duration: duration,
+        duration: 300,
         x: 4,
         y: 4,
         easing: 'easeInOutBack'
@@ -56,7 +56,7 @@ function toppingAnimation(duration) {
     cheese.pivot = new PIXI.Point(cheese.width / 2, cheese.height / 2)
     const cheeseAnimation = anime({
         targets: [cheese.scale],
-        duration: duration,
+        duration: 300,
         x: 4,
         y: 4,
         easing: 'linear',
@@ -82,8 +82,8 @@ function toppingAnimation(duration) {
     const meatPieces = meatCoords.map(coords => createMeat(coords.x, coords.y))
     const meatAnimation = anime({
         targets: meatPieces.map(it => it.scale),
-        delay: duration,
-        duration: duration,
+        delay: 300,
+        duration: 300,
         x: 1,
         y: 1,
         easing: 'linear'
@@ -115,9 +115,11 @@ function ovenAnimation(duration) {
 
     const animation = anime({
         targets: oven,
-        duration: duration,
-        alpha: 1.0,
-        easing: 'linear'
+        alpha: [
+            { value: 1.0, duration: 300, easing: 'linear' },
+            { value: 1.0, duration: duration - 600 },
+            { value: 0.0, duration: 300, easing: 'linear' }
+        ]
     })
 
     oven.on('added', () => animation.restart())
