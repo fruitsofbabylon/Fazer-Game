@@ -110,19 +110,17 @@ function createMeat(x, y) {
 
 function ovenAnimation(duration) {
     const oven = new PIXI.Sprite(resources['output/oven'].texture)
-    oven.width = 75
-    oven.height = 75
     oven.pivot = new PIXI.Point(oven.width / 2, oven.height / 2)
+    oven.alpha = 0.0
 
     const animation = anime({
-        targets: alpha,
+        targets: oven,
         duration: duration,
-        x: 4,
-        y: 4,
-        easing: 'easeInOutBack'
+        alpha: 1.0,
+        easing: 'linear'
     })
 
     oven.on('added', () => animation.restart())
-    oven.scale = new PIXI.Point(0, 0)
+    oven.scale = new PIXI.Point(4, 4)
     return oven
 }
