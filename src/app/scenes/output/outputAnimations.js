@@ -7,7 +7,8 @@ export const outputAnimations = {
     'actions/dough': doughAnimation,
     'actions/sauce': sauceAnimation,
     'actions/topping': toppingAnimation,
-    'actions/oven': ovenAnimation
+    'actions/oven': ovenAnimation,
+    'actions/cut': cutAnumation
 }
 
 function doughAnimation(duration) {
@@ -59,7 +60,7 @@ function toppingAnimation(duration) {
         duration: 300,
         x: 4,
         y: 4,
-        easing: 'linear',
+        easing: 'easeInOutBack',
     })
 
     // Meat coords relative to the center of fully grown cheese
@@ -86,7 +87,7 @@ function toppingAnimation(duration) {
         duration: 300,
         x: 1,
         y: 1,
-        easing: 'linear'
+        easing: 'easeInOutBack'
     })
 
     const container = new PIXI.Container()
@@ -123,6 +124,57 @@ function ovenAnimation(duration) {
     })
 
     oven.on('added', () => animation.restart())
-    oven.scale = new PIXI.Point(4, 4)
+    oven.scale = new PIXI.Point(2, 2)
     return oven
+}
+
+function cutAnumation(duration) {
+    const length = 400
+
+    const deg45 = .702 * .5
+    const lines = [
+        [new PIXI.Point(-length * .5, 0), new PIXI.Point(length * .5, 0)],
+        [new PIXI.Point(0, -length * .5), new PIXI.Point(0, length * .5)],
+        [new PIXI.Point(-length * deg45, -length * deg45), new PIXI.Point(length * deg45, length * deg45)],
+        [new PIXI.Point(-length * deg45, length * deg45), new PIXI.Point(length * deg45, -length * deg45)],
+    ]
+
+    const lineGraphics = lines.map(line => {
+        const [start, end] = line
+        const graphics = new PIXI.Graphics()
+            .lineStyle(1, 0x000000)
+            .moveTo(0, 0)
+            .lineTo(end.x - start.x, end.y - start.y)
+        
+        graphics.position = start
+
+        return [graphics, new PIXI.Point(start.x * 3, start.y * 3)]
+    })
+
+    const timeline = anime.timeline()
+    const itemDuration = duration / lineGraphics.length
+    lineGraphics.forEach(item => {
+        const [element, startPos] = item
+        timeline.add({
+            targets: element.position,
+            x: [startPos.x, element.x],
+            y: [startPos.y, element.y],
+            elasticity: 0,
+            easing: 'easeOutQuad',
+            duration: itemDuration
+        })
+    })
+
+    const container = new PIXI.Container()
+    const mask = new PIXI.Graphics()
+        .beginFill(0x000000, 1.0)
+        .drawCircle(0, 0, length * .5)
+        .endFill()
+    container.addChild(mask)
+    container.mask = mask
+    container.addChild(...lineGraphics.map(it => it[0]))
+    container.on('added', (el) => {
+        timeline.restart()
+    })
+    return container
 }
