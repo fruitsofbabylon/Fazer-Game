@@ -91,6 +91,7 @@ export default class OutputScene extends BaseScene {
 
     if (this.actions.length == 0 && this.sprites.length == 0) {
       this.showSuccess()
+      this.showHint(0)
       return
     } else if (correctId != id) {
       this.showError()
