@@ -92,7 +92,7 @@ export default class OutputScene extends BaseScene {
     if (this.actions.length == 0 && this.sprites.length == 0) {
       this.showSuccess()
       this.removeChild(this.getChildByName('hint'))
-      this.clearTimeout(this.hintTimeout)
+      clearTimeout(this.hintTimeout)
       return
     } else if (correctId != id) {
       this.showError()
